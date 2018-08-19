@@ -1,6 +1,7 @@
 package get.and.set.alarm.AddAlarmActivity;
 
 import android.os.Build;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TimePicker;
 
@@ -43,6 +44,7 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
         }
+        Log.e("Point_1","Dummy");
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
