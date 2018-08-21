@@ -20,13 +20,11 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
     private AddAlarm addAlarm;
     private AddAlarmInteractor addAlarmInteractor;
     private boolean[] pressedOrNot;
-    private boolean[] days;
 
     public AddAlarmPresenterImpl(AddAlarm addAlarm, AddAlarmInteractor addAlarmInteractor) {
         this.addAlarm = addAlarm;
         this.addAlarmInteractor = addAlarmInteractor;
         pressedOrNot = new boolean[7];
-        days = new boolean[7];
     }
 
     @Override
@@ -35,8 +33,7 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
     }
 
     @Override
-    public long convertToMillis(TimePicker timePicker) {
-        Calendar calendar = Calendar.getInstance();
+    public long convertToMillis(TimePicker timePicker, Calendar calendar) {
         if (Build.VERSION.SDK_INT > 22) {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
             calendar.set(Calendar.MINUTE, timePicker.getMinute());
@@ -44,7 +41,6 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
         }
-        Log.e("Point_1","Dummy");
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
@@ -54,10 +50,8 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
     public void weekdayPressed(int day) {
         day = day - 1;
         if (!pressedOrNot[day]) {
-            days[day] = true;
             pressedOrNot[day] = true;
         } else {
-            days[day] = false;
             pressedOrNot[day] = false;
         }
     }
@@ -67,7 +61,7 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
         String numbersOfDays = "";
         for (int i = 0; i < 7; i++) {
             // if in boolean array of days ith element is true then it is the day when alarm should be working
-            if (days[i]) {
+            if (pressedOrNot[i]) {
                 numbersOfDays += String.valueOf(i) + ",";
             }
         }
@@ -75,16 +69,11 @@ public class AddAlarmPresenterImpl implements AddAlarmPresenter, AddAlarmInterac
     }
 
     @Override
-    public void setInitialPressStatus(int[] ids, String days) {
-        Button[] buttons = new Button[ids.length];
-        for (int i = 0; i<ids.length; i++) {
-            buttons[i] = addAlarm.getActivity().findViewById(ids[i]);
-        }
+    public void setInitialPressStatus(Button[] buttons, String days) {
         String[] dayNumbers = days.split(",");
         for (int i = 0; i<dayNumbers.length; i++) {
             buttons[Integer.parseInt(dayNumbers[i])].setEnabled(true);
             pressedOrNot[Integer.parseInt(dayNumbers[i])] = true;
-            this.days[Integer.parseInt(dayNumbers[i])] = true;
         }
     }
 

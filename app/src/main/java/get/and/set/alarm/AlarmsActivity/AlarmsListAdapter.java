@@ -1,5 +1,6 @@
 package get.and.set.alarm.AlarmsActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,9 +34,10 @@ public class AlarmsListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private ArrayList<Alarm> alarms;
     private AlarmsPresenter presenter;
+    private ServicesManager servicesManager;
 
-    public AlarmsListAdapter(ArrayList<Alarm> alarms, AlarmsPresenter presenter){
-        layoutInflater = ServicesManager.getInstance().getLayoutInflater();
+    public AlarmsListAdapter(ServicesManager servicesManager, ArrayList<Alarm> alarms, AlarmsPresenter presenter){
+        layoutInflater = servicesManager.getLayoutInflater();
         this.alarms = alarms;
         this.presenter = presenter;
     }
@@ -90,11 +92,11 @@ public class AlarmsListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Log.e("Point_1", "OnItemClickListener " + (i));
-                Intent intent = new Intent(ServicesManager.getInstance().getContext(), AddAlarmImpl.class);
+                Intent intent = new Intent(servicesManager.getContext(), AddAlarmImpl.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("intention", "edit");
                 intent.putExtra("alarm", (Alarm) alarms.get(i));
-                ServicesManager.getInstance().getContext().startActivity(intent);
+                servicesManager.getContext().startActivity(intent);
             }
         });
         return view;

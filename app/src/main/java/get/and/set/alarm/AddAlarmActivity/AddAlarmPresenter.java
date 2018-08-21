@@ -1,6 +1,9 @@
 package get.and.set.alarm.AddAlarmActivity;
 
+import android.widget.Button;
 import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 import get.and.set.alarm.AlarmModel;
 import get.and.set.alarm.ProjectEntities.Alarm;
@@ -14,13 +17,13 @@ public interface AddAlarmPresenter {
 
     public void addAlarm(AlarmModel alarmModel, Alarm alarm);
 
-    public long convertToMillis(TimePicker timePicker);
+    public long convertToMillis(TimePicker timePicker, Calendar calendar);
 
     public void weekdayPressed(int id);
 
     public String getDays();
 
-    public void setInitialPressStatus(int[] ids, String days);
+    public void setInitialPressStatus(Button[] buttons, String days);
 
     public void setTime(TimePicker timePicker, String time);
 

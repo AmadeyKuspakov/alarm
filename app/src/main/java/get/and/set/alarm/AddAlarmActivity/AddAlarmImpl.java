@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import get.and.set.alarm.AlarmModel;
+import get.and.set.alarm.AlarmRepository.AlarmRepository;
+import get.and.set.alarm.AlarmRepository.SQLite.SQLiteAlarmRepository;
 import get.and.set.alarm.ProjectEntities.Alarm;
 import get.and.set.alarm.R;
 import get.and.set.alarm.ServicesManager;
@@ -23,6 +26,7 @@ public class AddAlarmImpl extends Activity implements AddAlarm, View.OnClickList
     private int id;
     private TimePicker timePicker;
     private EditText editText;
+    private int[] buttonsIds = new int[]{R.id.Monday, R.id.Tuesday, R.id.Wednessday, R.id.Thursday, R.id.Friday, R.id.Sunday, R.id.Saturday};
 
     @Override
     public Activity getActivity() {
@@ -33,17 +37,11 @@ public class AddAlarmImpl extends Activity implements AddAlarm, View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
-        presenter = new AddAlarmPresenterImpl(this);
+        AddAlarmInteractor addAlarmInteractor = new AddAlarmInteractorImpl(new SQLiteAlarmRepository(this.getBaseContext()));
+        presenter = new AddAlarmPresenterImpl(this, addAlarmInteractor);
         editText = findViewById(R.id.phraseBox);
         timePicker = findViewById(R.id.timePicker);
-        findViewById(R.id.Monday).setOnClickListener(this);
-        findViewById(R.id.Tuesday).setOnClickListener(this);
-        findViewById(R.id.Wednessday).setOnClickListener(this);
-        findViewById(R.id.Thursday).setOnClickListener(this);
-        findViewById(R.id.Friday).setOnClickListener(this);
-        findViewById(R.id.Sunday).setOnClickListener(this);
-        findViewById(R.id.Saturday).setOnClickListener(this);
-        findViewById(R.id.NewAlarm).setOnClickListener(this);
+        Button[] buttons = setButtons(buttonsIds);
         String intention = getIntent().getStringExtra("intention");
         switch (intention){
             case "new":
@@ -54,9 +52,18 @@ public class AddAlarmImpl extends Activity implements AddAlarm, View.OnClickList
                 id = alarm.getId();
                 editText.setText(alarm.getPhrase());
                 presenter.setTime(timePicker, alarm.getDisplayTime());
-                presenter.setInitialPressStatus(new int[]{R.id.Monday, R.id.Tuesday, R.id.Wednessday, R.id.Thursday, R.id.Friday, R.id.Sunday, R.id.Saturday}, alarm.getDays());
+                presenter.setInitialPressStatus(buttons, alarm.getDays());
                 break;
         }
+    }
+
+    private Button[] setButtons(int[] ids){
+        Button[] buttons = new Button[ids.length];
+        for(int i = 0; i<ids.length; i++){
+            buttons[i] = this.findViewById(ids[i]);
+            buttons[i].setOnClickListener(this);
+        }
+        return buttons;
     }
 
     @Override
@@ -94,7 +101,7 @@ public class AddAlarmImpl extends Activity implements AddAlarm, View.OnClickList
                 presenter.weekdayPressed(7);
                 break;
             case R.id.NewAlarm:
-                presenter.addAlarm(new AlarmModel(AddAlarmImpl.this.getBaseContext()), new Alarm(id + 1, presenter.convertToMillis(timePicker), presenter.getDays(), editText.getText().toString(), true));
+                presenter.addAlarm(new AlarmModel(AddAlarmImpl.this.getBaseContext()), new Alarm(id + 1, presenter.convertToMillis(timePicker, Calendar.getInstance()), presenter.getDays(), editText.getText().toString(), true));
         }
     }
 }

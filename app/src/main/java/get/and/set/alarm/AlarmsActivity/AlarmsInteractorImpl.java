@@ -25,8 +25,8 @@ public class AlarmsInteractorImpl implements AlarmsInteractor {
     private final String alarmsRetrievalError = "Unfortunately, alarms could not be retrieved.";
     private final String alarmDeletionError = "Something went wrong during deletion.";
 
-    public AlarmsInteractorImpl(){
-        alarmRepository = new SQLiteAlarmRepository();
+    public AlarmsInteractorImpl(AlarmRepository alarmRepository){
+        alarmRepository = alarmRepository;
     }
 
     @Override

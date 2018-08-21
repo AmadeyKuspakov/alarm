@@ -21,8 +21,10 @@ public class AlarmsPresenterImpl implements AlarmsPresenter, AlarmsInteractor.On
     private AlarmsActivity alarmsActivity;
     private AlarmsInteractor alarmsInteractor;
     private AlarmModel alarmModel;
+    private ServicesManager servicesManager;
 
-    public AlarmsPresenterImpl(AlarmModel alarmModel, AlarmsActivity alarmsActivity, AlarmsInteractor alarmsInteractor){
+    public AlarmsPresenterImpl(ServicesManager servicesManager, AlarmModel alarmModel, AlarmsActivity alarmsActivity, AlarmsInteractor alarmsInteractor){
+        this.servicesManager = servicesManager;
         this.alarmModel = alarmModel;
         this.alarmsActivity = alarmsActivity;
         this.alarmsInteractor = alarmsInteractor;
@@ -64,7 +66,7 @@ public class AlarmsPresenterImpl implements AlarmsPresenter, AlarmsInteractor.On
 
     @Override
     public void onSuccess(ArrayList<Alarm> alarms) {
-        alarmsActivity.setAlarms(new AlarmsListAdapter(alarms, this));
+        alarmsActivity.setAlarms(new AlarmsListAdapter(servicesManager,alarms, this));
     }
 
     @Override

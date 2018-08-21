@@ -1,5 +1,6 @@
 package get.and.set.alarm.AlarmRepository.SQLite;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -29,8 +30,8 @@ public class SQLiteAlarmRepository extends SQLiteOpenHelper implements AlarmRepo
     private final static int DB_VERSION = 1;
     private final static String DB_NAME = "alarmRepository";
 
-    public SQLiteAlarmRepository(){
-        super(ServicesManager.getInstance().getContext(), DB_NAME, null, DB_VERSION);
+    public SQLiteAlarmRepository(Context context){
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import get.and.set.alarm.AddAlarmActivity.AddAlarmImpl;
 import get.and.set.alarm.AlarmModel;
+import get.and.set.alarm.AlarmRepository.SQLite.SQLiteAlarmRepository;
 import get.and.set.alarm.ProjectEntities.Alarm;
 import get.and.set.alarm.R;
 import get.and.set.alarm.ServicesManager;
@@ -36,7 +37,7 @@ public class AlarmsActivityImpl extends Activity implements AlarmsActivity, View
         setContentView(R.layout.alarms);
         (findViewById(R.id.add_alarm)).setOnClickListener(this);
         listView = findViewById(R.id.alarms);
-        presenter = new AlarmsPresenterImpl(new AlarmModel(this.getBaseContext()),this, new AlarmsInteractorImpl());
+        presenter = new AlarmsPresenterImpl(new ServicesManager(this.getBaseContext()), new AlarmModel(this.getBaseContext()),this, new AlarmsInteractorImpl(new SQLiteAlarmRepository(this.getBaseContext())));
         presenter.askPermissions(permissions);
         presenter.getAlarms();
     }
